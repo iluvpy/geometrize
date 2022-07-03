@@ -1,0 +1,14 @@
+cflags = -std=c++17 -Wall -g -I/usr/local/include/opencv4/ -I./src/include/
+lflags = -L/usr/local/lib -lSDL2 -lSDL2_image -lopencv_imgcodecs -lopencv_objdetect -lopencv_features2d -lopencv_imgproc -lopencv_highgui -lopencv_core -lopencv_features2d  
+cxx = clang++ 
+
+
+rule cc
+  command = $cxx -c $in -o $out $cflags
+rule lnk
+  command = $cxx $in -o $out $lflags 
+
+
+build obj/main.o: cc src/main.cpp
+build obj/window.o: cc src/Window.cpp
+build client: lnk obj/main.o obj/window.o
