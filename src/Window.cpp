@@ -22,7 +22,7 @@ void Window::drawImage(cv::Mat image) {
         int height = image.rows;
         for (int y = 0; y < height-1; y++) {
             for (int x = 0; x < width-1; x++) {
-                cv::Vec3b pixel = image.at<cv::Vec3b>(x, y);
+                cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
                 SDL_SetRenderDrawColor(m_renderer, (uint8_t)pixel[0], (uint8_t)pixel[1], (uint8_t)pixel[2], 255);
                 SDL_RenderDrawPoint(m_renderer, x, y);
             }
