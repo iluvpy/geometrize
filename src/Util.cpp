@@ -5,7 +5,7 @@ int Util::getRandInt(int min, int max) {
 }
 
 Color Util::getRandomColor() {
-    return Color{getRandInt(), getRandInt(), getRandInt()};
+    return Color{(uint8)getRandInt(0, 255), (uint8)getRandInt(0, 255), (uint8)getRandInt(0, 255)};
 }
 
 float Util::toRad(float angle) {

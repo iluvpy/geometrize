@@ -19,7 +19,7 @@ enum Shapes : unsigned char {
     Triangle,
     Cube,
     Rectangle
-}
+};
 
 class Shape {
 public:
@@ -42,4 +42,4 @@ private:
     void createRandomCube();
     void createRandomRectangle();
 
-}
+};

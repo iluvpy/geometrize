@@ -16,4 +16,4 @@ private:
     uint8 m_b;
     // used to decide if the pixel should be added to the image
     bool m_valid;
-}
+};

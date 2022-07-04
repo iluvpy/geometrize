@@ -7,5 +7,5 @@ namespace Util {
     int getRandInt(int min, int max);
     Color getRandomColor();
     Point rotatePoint(const Point& p, const Point& origin, float angle);    
-    float Util::toRad(float angle);
+    float toRad(float angle);
 }

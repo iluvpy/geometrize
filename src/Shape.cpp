@@ -6,22 +6,22 @@ Shape::Shape(int imageWidth, int imageHeight) {
 }
 
 void Shape::generateRandomShape() {
-    Shapes shape = getRandomShape();
-    switch (shape)
-    {
-        case Circle:
-            m_shapeMat = createRandomCircle();
-            break;
-        case Triangle:
-            m_shapeMat = createRandomTriangle();
-            break;
-        case Cube:
-            m_shapeMat = createRandomCube);
-            break; 
-        case Rectangle:
-            m_shapeMat = createRandomRectangle();
-            break;
-    }
+    // Shapes shape = getRandomShape();
+    // switch (shape)
+    // {
+    //     case Circle:
+    //         m_shapeMat = createRandomCircle();
+    //         break;
+    //     case Triangle:
+    //         m_shapeMat = createRandomTriangle();
+    //         break;
+    //     case Cube:
+    //         m_shapeMat = createRandomCube);
+    //         break; 
+    //     case Rectangle:
+    //         m_shapeMat = createRandomRectangle();
+    //         break;
+    // }
 }
 
 Shapes Shape::getRandomShape() {
