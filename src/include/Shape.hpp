@@ -26,8 +26,13 @@ enum Shapes : unsigned char {
 class Shape {
 public:
     Shape(int imageWidth, int imageHeight);
+    Shape();
     void generateRandomShape();
     int getScore(cv::Mat image);
+    std::vector<std::vector<bool>> getShapeMat() const;
+    Color getColor() const;
+    Point getPosition() const;
+    cv::Mat getImageWithShape(cv::Mat image);
 private:
     int m_x; // position of the shape in the image
     int m_y; // position of the shape in the image
@@ -36,7 +41,7 @@ private:
     int m_imageW;
     int m_imageH;
     int m_angle;
-    Shapes m_shape;
+    Shapes m_shapeType;
     Color m_color;
     std::vector<std::vector<bool>> m_shapeMat;
 

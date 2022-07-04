@@ -1,9 +1,26 @@
 #include "Shape.hpp"
-
+#include <iostream>
 
 Shape::Shape(int imageWidth, int imageHeight) {
     m_imageW = imageWidth;
     m_imageH = imageHeight;
+}
+
+Shape::Shape() {
+    m_imageW = 0;
+    m_imageH = 0;
+}
+
+std::vector<std::vector<bool>> Shape::getShapeMat() const {
+    return m_shapeMat;
+}
+
+Color Shape::getColor() const {
+    return m_color;
+}
+
+Point Shape::getPosition() const {
+    return Point{m_x, m_y};
 }
 
 void Shape::generateRandomShape() {
@@ -24,7 +41,7 @@ void Shape::generateRandomShape() {
     //         break;
     // }
     // for testing purpose im only gonna use circles for now
-    m_shape = Shapes::Circle;
+    m_shapeType = Shapes::Circle;
     createRandomCircle();
 }
 
@@ -39,17 +56,23 @@ void Shape::createRandomCircle() {
     m_y = Util::getRandInt(0, m_imageH-m_height/2);
     m_color = Util::getRandomColor();
     m_angle = 0;
-    std::vector<std::vector<bool>> mat = getMat(m_width, m_height);
+    std::vector<std::vector<bool>> mat = getMat(m_width+100, m_height+100);
     
     // create circle using the randomly generated values
-
     int radius = (int)(m_width/2);
+    int i = 0;
+    int k = 0;
     for(int y=-radius; y<=radius; y++) {
         for(int x=-radius; x<=radius; x++) {
             if(x*x+y*y <= radius*radius) {
-                mat[y+m_y][x+m_x] = true;
+                // std::cout << "w: " << m_width << " h: " << m_height << std::endl;
+                // std::cout << "i: " << i << " k: " << k << std::endl;
+                mat[i][k] = true;
             }
+            k++;
         }
+        i++;
+        k = 0;
     }
 
     m_shapeMat = mat;
@@ -110,10 +133,11 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) {
     for (int y = m_y; y < m_imageH; y++) {
         for (int x = m_x; x < m_imageW; x++) {
             if (m_shapeMat[y][x]) {
-                srcImage.at<cv::Vec3b>(x, y) = cv::Vec3b(m_color.r, m_color.g, m_color.b);
+                srcImage.at<cv::Vec3b>(y, x) = cv::Vec3b(m_color.r, m_color.g, m_color.b);
             }
         }
     }
+    return srcImage;
 }
 
 
@@ -121,5 +145,19 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) {
 // will add the current shape to the image, subtract the new image to the old one
 // and then sum all the pixel values and returning them, the smaller the value the better
 int Shape::getScore(cv::Mat image) {
+    cv::Mat imgWithShape = addShapeToImage(image);
+    int sum = 0;
+    for (int y = 0; y < m_imageH; y++) {
+        for (int x = 0; x < m_imageW; x++) {
+            cv::Vec3b p1 = image.at<cv::Vec3b>(y, x);
+            cv::Vec3b p2 = imgWithShape.at<cv::Vec3b>(y, x);
+            sum += p1[0] - p2[0] + p1[1] - p2[1] + p1[2] - p2[2];
+        }
+    }
+    return sum;
+}
 
+
+cv::Mat Shape::getImageWithShape(cv::Mat image) {
+    return addShapeToImage(image);
 }
