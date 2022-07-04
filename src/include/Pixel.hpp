@@ -1,19 +1,16 @@
 #pragma once
 #include "Util.hpp"
-
-
-typedef unsigned char uint8;
+#include "Color.hpp"
 
 class Pixel {
 public:
     Pixel();
     void setRandomColor();
-    void setColor(uint8 r, uint8 g, uint8 b);
+    void setColor(const Color& color);
     void setValid(bool valid);
+    bool isValid();
 private:
-    uint8 m_r;
-    uint8 m_g;
-    uint8 m_b;
+    Color m_color;
     // used to decide if the pixel should be added to the image
     bool m_valid;
 };
