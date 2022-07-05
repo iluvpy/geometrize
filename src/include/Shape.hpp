@@ -28,7 +28,7 @@ public:
     Shape(int imageWidth, int imageHeight);
     Shape();
     void generateRandomShape();
-    int getScore(cv::Mat image);
+    double getScore(cv::Mat originalImage, cv::Mat shapeImage);
     std::vector<std::vector<bool>> getShapeMat() const;
     Color getColor() const;
     Point getPosition() const;

@@ -1,5 +1,7 @@
 #include "Shape.hpp"
 #include <iostream>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 Shape::Shape(int imageWidth, int imageHeight) {
     m_imageW = imageWidth;
@@ -74,7 +76,6 @@ void Shape::createRandomCircle() {
         i++;
         k = 0;
     }
-
     m_shapeMat = mat;
 }
 
@@ -121,7 +122,7 @@ std::vector<std::vector<bool>> Shape::getMat(int width, int height) {
     std::vector<std::vector<bool>> mat;
     for (int i = 0; i < height; i++) {
         std::vector<bool> layer;
-        for (int k = 0; k < height; k++) {
+        for (int j = 0; j < height; j++) {
             layer.push_back(false);
         }
         mat.push_back(layer);
@@ -130,12 +131,39 @@ std::vector<std::vector<bool>> Shape::getMat(int width, int height) {
 }
 
 cv::Mat Shape::addShapeToImage(cv::Mat srcImage) {
-    for (int y = m_y; y < m_imageH; y++) {
-        for (int x = m_x; x < m_imageW; x++) {
-            if (m_shapeMat[y][x]) {
-                srcImage.at<cv::Vec3b>(y, x) = cv::Vec3b(m_color.r, m_color.g, m_color.b);
+    // for (int y = m_y; y < m_imageH; y++) {
+    //     for (int x = m_x; x < m_imageW; x++) {
+    //         if (m_shapeMat[y][x]) {
+    //             int r = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.r;
+    //             int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
+    //             int b = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.b;
+               
+    //             srcImage.at<cv::Vec3b>(y, x)[0] = r <= 255 ? r : 255;
+    //             srcImage.at<cv::Vec3b>(y, x)[1] = g <= 255 ? g : 255;
+    //             srcImage.at<cv::Vec3b>(y, x)[2] = b <= 255 ? b : 255;
+    //         }
+    //     }
+    // }
+
+    int y = m_x;
+    int x = m_y;
+    for (const auto& layer : m_shapeMat) {
+        for (const auto& pixel : layer) {
+            if (pixel) {
+                if (x < m_imageW && y < m_imageH) {
+                    int r = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.r;
+                    int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
+                    int b = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.b;
+
+                    srcImage.at<cv::Vec3b>(y, x)[0] = r <= 255 ? r : 255-r;
+                    srcImage.at<cv::Vec3b>(y, x)[1] = g <= 255 ? g : 255-g;
+                    srcImage.at<cv::Vec3b>(y, x)[2] = b <= 255 ? b : 255-b;
+                }
             }
+            x++;
         }
+        y++;
+        x = m_x;
     }
     return srcImage;
 }
@@ -144,20 +172,17 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) {
 
 // will add the current shape to the image, subtract the new image to the old one
 // and then sum all the pixel values and returning them, the smaller the value the better
-int Shape::getScore(cv::Mat image) {
-    cv::Mat imgWithShape = addShapeToImage(image);
-    int sum = 0;
-    for (int y = 0; y < m_imageH; y++) {
-        for (int x = 0; x < m_imageW; x++) {
-            cv::Vec3b p1 = image.at<cv::Vec3b>(y, x);
-            cv::Vec3b p2 = imgWithShape.at<cv::Vec3b>(y, x);
-            sum += p1[0] - p2[0] + p1[1] - p2[1] + p1[2] - p2[2];
-        }
-    }
+double Shape::getScore(cv::Mat originalImage, cv::Mat shapeImage) {
+    cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
+    cv::Mat resultingImage;
+    cv::subtract(imgWithShape, originalImage, resultingImage);
+
+    double sum = cv::sum(resultingImage)[0];
+    //std::cout << "score: " << sum << std::endl;
     return sum;
 }
 
 
 cv::Mat Shape::getImageWithShape(cv::Mat image) {
-    return addShapeToImage(image);
+    return addShapeToImage(image.clone());
 }

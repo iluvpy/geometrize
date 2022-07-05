@@ -9,10 +9,9 @@ class Geometrize {
 public:
     Geometrize(const cv::Mat& image);
     void update();
-    Shape getBestShape();
+    cv::Mat getShapeImage();
 private:
     cv::Mat m_originalImage;
-    cv::Mat m_image;
-    Shape m_bestShape;
+    cv::Mat m_shapeImage;
     std::vector<Shape> m_shapes;
 };

@@ -35,12 +35,12 @@ int main(int argc, char **argv) {
         Window window(sdlwindow, sdlrenderer);
         Geometrize geometrize(image);
         while (window.running()) {
+
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            
             geometrize.update();
-            window.addShape(geometrize.getBestShape());
-            window.drawImage(image);
+            window.drawImage(geometrize.getShapeImage());
             window.update();
+
         } 
 
         //cv::imwrite("test_out.jpg", image);

@@ -15,11 +15,9 @@ public:
     void update();
     bool running();
     double clock();
-    void addShape(const Shape& shape);
 private:
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;
     bool m_running;
     double m_lastImageDrawn;
-    std::vector<Shape> m_shapes;
 };
