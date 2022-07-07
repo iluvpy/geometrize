@@ -6,11 +6,13 @@
 Shape::Shape(int imageWidth, int imageHeight) {
     m_imageW = imageWidth;
     m_imageH = imageHeight;
+    m_score = DEFAULT_SCORE;
 }
 
 Shape::Shape() {
     m_imageW = 0;
     m_imageH = 0;
+    m_score = DEFAULT_SCORE;
 }
 
 std::vector<std::vector<bool>> Shape::getShapeMat() const {
@@ -55,20 +57,22 @@ void Shape::createRandomCircle() {
     m_width = Util::getRandInt(MIN_CIRCLE_DIAMETER, MAX_CIRCLE_DIAMETER);
     m_height = m_width;
     m_x = Util::getRandInt(0, m_imageW-m_width/2);
-    m_y = Util::getRandInt(0, m_imageH-m_height/2);
+    m_y = Util::getRandInt(0, m_imageH-m_width/2);
     m_color = Util::getRandomColor();
     m_angle = 0;
+    createCircle();
+}
+
+void Shape::createCircle() {
     std::vector<std::vector<bool>> mat = getMat(m_width+100, m_height+100);
     
     // create circle using the randomly generated values
     int radius = (int)(m_width/2);
     int i = 0;
     int k = 0;
-    for(int y=-radius; y<=radius; y++) {
-        for(int x=-radius; x<=radius; x++) {
+    for(int y=-radius; y <= radius; y++) {
+        for(int x=-radius; x <= radius; x++) {
             if(x*x+y*y <= radius*radius) {
-                // std::cout << "w: " << m_width << " h: " << m_height << std::endl;
-                // std::cout << "i: " << i << " k: " << k << std::endl;
                 mat[i][k] = true;
             }
             k++;
@@ -86,6 +90,10 @@ void Shape::createRandomTriangle() {
     m_y = Util::getRandInt(0, m_imageH-m_height/2);
     m_color = Util::getRandomColor();
     m_angle = Util::getRandInt(0, 360);
+    createTriangle();
+}
+
+void Shape::createTriangle() {
     std::vector<std::vector<bool>> mat;
 
     // create triangle using the randomly generated values
@@ -107,7 +115,6 @@ void Shape::createRandomTriangle() {
 
     // rotate
     //std::vector<std::vector<bool>> rotatedMat;
-
 }
 
 void Shape::createRandomCube() {
@@ -130,7 +137,7 @@ std::vector<std::vector<bool>> Shape::getMat(int width, int height) {
     return mat;
 }
 
-cv::Mat Shape::addShapeToImage(cv::Mat srcImage) {
+cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
     // for (int y = m_y; y < m_imageH; y++) {
     //     for (int x = m_x; x < m_imageW; x++) {
     //         if (m_shapeMat[y][x]) {
@@ -169,20 +176,70 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) {
 }
 
 
-
-// will add the current shape to the image, subtract the new image to the old one
-// and then sum all the pixel values and returning them, the smaller the value the better
-double Shape::getScore(cv::Mat originalImage, cv::Mat shapeImage) {
+// calculates a new score, sets the score member to the value and returns it
+void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage) {
     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
     cv::Mat resultingImage;
     cv::subtract(imgWithShape, originalImage, resultingImage);
-
-    double sum = cv::sum(resultingImage)[0];
-    //std::cout << "score: " << sum << std::endl;
-    return sum;
+    m_score = cv::sum(resultingImage)[0]; 
 }
+
+// returns the score member
+double Shape::getScore() const {
+    return m_score;
+}   
 
 
 cv::Mat Shape::getImageWithShape(cv::Mat image) {
     return addShapeToImage(image.clone());
+}
+
+
+void Shape::mutate() {
+    switch (m_shapeType)
+    {
+        case Circle:
+            return mutateCircle();
+            break;
+        
+        case Triangle:
+            return mutateTriangle();
+            break;
+
+        case Cube:
+            return mutateCube();
+            break;
+
+        case Rectangle:
+            return mutateRectangle();
+            break;
+    }
+}
+
+const Shape& Shape::copy() const {
+    return *this;
+}
+
+void Shape::mutateCircle() {
+    m_width += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_height = m_width;
+    m_x += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_y += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_color.r += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_color.g += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_color.b += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_angle = 0;
+    createCircle();
+}
+
+void Shape::mutateTriangle() {
+
+}
+
+void Shape::mutateCube() {
+
+}
+
+void Shape::mutateRectangle() {
+
 }

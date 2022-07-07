@@ -9,6 +9,8 @@ class Geometrize {
 public:
     Geometrize(const cv::Mat& image);
     void update();
+    void generateShapes();
+    void findBestShapes(Shape *bestShape);
     cv::Mat getShapeImage();
 private:
     cv::Mat m_originalImage;

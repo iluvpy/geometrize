@@ -6,7 +6,7 @@
 #include <chrono>
 #include "Shape.hpp"
 
-#define IMAGE_DRAW_INTERVAL 2.0f
+#define IMAGE_DRAW_INTERVAL 1.0f
 
 class Window {
 public:

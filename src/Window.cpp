@@ -14,7 +14,6 @@ void Window::drawImage(cv::Mat image) {
     if (now-m_lastImageDrawn > IMAGE_DRAW_INTERVAL) {
         SDL_SetRenderDrawColor(m_renderer, 100, 100, 100, 255);
         SDL_RenderClear(m_renderer);
-        std::cout << "drawing image!\n";
         int width = image.cols;
         int height = image.rows;
         for (int i = 0; i < height; i++) {
