@@ -56,8 +56,8 @@ Shapes Shape::getRandomShape() {
 void Shape::createRandomCircle() {
     m_width = Util::getRandInt(MIN_CIRCLE_DIAMETER, MAX_CIRCLE_DIAMETER);
     m_height = m_width;
-    m_x = Util::getRandInt(0, m_imageW-m_width/2);
-    m_y = Util::getRandInt(0, m_imageH-m_width/2);
+    m_x = Util::getRandInt(-m_width+1, m_imageW-1);
+    m_y = Util::getRandInt(-m_height+1, m_imageH-1);
     m_color = Util::getRandomColor();
     m_angle = 0;
     createCircle();
@@ -86,8 +86,8 @@ void Shape::createCircle() {
 void Shape::createRandomTriangle() {
     m_width = Util::getRandInt(TRIANGLE_BASE_MIN, TRIANGLE_BASE_MAX);
     m_height = Util::getRandInt(TRIANGLE_HEIGHT_MIN, TRIANGLE_HEIGHT_MAX);
-    m_x = Util::getRandInt(-m_width/2, m_imageW);
-    m_y = Util::getRandInt(-m_height/2, m_imageH);
+    m_x = Util::getRandInt(-m_width+1, m_imageW-1);
+    m_y = Util::getRandInt(-m_height+1, m_imageH-1);
     m_color = Util::getRandomColor();
     m_angle = Util::getRandInt(0, 360);
     createTriangle();
@@ -138,19 +138,6 @@ std::vector<std::vector<bool>> Shape::getMat(int width, int height) {
 }
 
 cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
-    // for (int y = m_y; y < m_imageH; y++) {
-    //     for (int x = m_x; x < m_imageW; x++) {
-    //         if (m_shapeMat[y][x]) {
-    //             int r = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.r;
-    //             int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
-    //             int b = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.b;
-               
-    //             srcImage.at<cv::Vec3b>(y, x)[0] = r <= 255 ? r : 255;
-    //             srcImage.at<cv::Vec3b>(y, x)[1] = g <= 255 ? g : 255;
-    //             srcImage.at<cv::Vec3b>(y, x)[2] = b <= 255 ? b : 255;
-    //         }
-    //     }
-    // }
 
     int y = m_x-1;
     int x = m_y-1;
