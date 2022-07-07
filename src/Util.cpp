@@ -1,6 +1,7 @@
 #include "Util.hpp"
 
 int Util::getRandInt(int min, int max) {
+	
     return min + rand() % max;
 }
 

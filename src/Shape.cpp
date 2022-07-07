@@ -86,8 +86,8 @@ void Shape::createCircle() {
 void Shape::createRandomTriangle() {
     m_width = Util::getRandInt(TRIANGLE_BASE_MIN, TRIANGLE_BASE_MAX);
     m_height = Util::getRandInt(TRIANGLE_HEIGHT_MIN, TRIANGLE_HEIGHT_MAX);
-    m_x = Util::getRandInt(0, m_imageW-m_width/2);
-    m_y = Util::getRandInt(0, m_imageH-m_height/2);
+    m_x = Util::getRandInt(-m_width/2, m_imageW);
+    m_y = Util::getRandInt(-m_height/2, m_imageH);
     m_color = Util::getRandomColor();
     m_angle = Util::getRandInt(0, 360);
     createTriangle();
@@ -152,12 +152,12 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
     //     }
     // }
 
-    int y = m_x;
-    int x = m_y;
+    int y = m_x-1;
+    int x = m_y-1;
     for (const auto& layer : m_shapeMat) {
         for (const auto& pixel : layer) {
             if (pixel) {
-                if (x < m_imageW && y < m_imageH) {
+                if (x < m_imageW && y < m_imageH && y >= 0 && x >= 0) {
                     int r = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.r;
                     int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
                     int b = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.b;

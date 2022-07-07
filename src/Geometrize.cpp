@@ -2,6 +2,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <limits>
+#include "Debug.hpp"
 
 Geometrize::Geometrize(const cv::Mat& image) {
     m_originalImage = image.clone();
@@ -49,21 +50,23 @@ void Geometrize::findBestShapes(Shape *bestShape) {
  
     //set best shape
     *bestShape = m_shapes[0]; 
-
+    DEBUG_LOG("found best shape/s");
     // delete worst shapes
     int halfIndex = (int)(m_shapes.size()/2);
     while (m_shapes.size() > halfIndex) {
         m_shapes.pop_back();
     }
+    
+    DEBUG_LOG("deleted the worst shapes");
 
     int size = m_shapes.size();
-    std::cout << size;
     // mutate shapes
     for (int i = 0; i < size; i++) {
         Shape mutatedCopy = m_shapes[i];
         mutatedCopy.mutate();
         m_shapes.push_back(mutatedCopy);
     }
+    DEBUG_LOG("mutated the best shapes");
 }
 
 void Geometrize::update() {
@@ -71,7 +74,9 @@ void Geometrize::update() {
     for (int i = 0; i < 1; i++) {
         findBestShapes(&bestShape);
     }
+    DEBUG_LOG("after fbs");
     cv::Mat img = bestShape.getImageWithShape(m_shapeImage);
     m_shapeImage = img;
     cv::imwrite("shape_img.png", m_shapeImage);
+    DEBUG_LOG("saved shape img");
 }
