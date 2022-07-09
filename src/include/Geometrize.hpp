@@ -12,6 +12,7 @@ public:
     void generateShapes();
     void sortBestShapes();
     void findBestShapes();
+    cv::Mat getColorDiffImage(cv::Mat original, cv::Mat shapeImg);
     cv::Mat getShapeImage();
 private:
     cv::Mat m_originalImage;

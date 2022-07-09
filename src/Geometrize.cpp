@@ -79,5 +79,13 @@ void Geometrize::update() {
         sortBestShapes();
     }
     cv::imwrite("shape_img.png", m_shapeImage);
+    cv::imwrite("color_diff.png", getColorDiffImage(m_originalImage, m_shapeImage));
     DEBUG_LOG("saved shape img");
+}
+
+
+cv::Mat getColorDiffImage(cv::Mat original, cv::Mat shapeImg) {
+    cv::Mat resultImg;
+    cv::subtract(shapeImg, original, resultImg);
+    return resultImg;
 }
