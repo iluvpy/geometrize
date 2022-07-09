@@ -10,11 +10,12 @@
 
 class Window {
 public:
-    Window(SDL_Window *window, SDL_Renderer *renderer);
+    Window();
     void drawImage(cv::Mat image);
     void update();
     bool running();
     double clock();
+    void close();
 private:
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;

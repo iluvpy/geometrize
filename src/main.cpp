@@ -8,8 +8,11 @@
 #include "Window.hpp"
 #include "Geometrize.hpp"
 
+
+void updateGeometrize(Geometrize *geometrize, Window *window);
+
 int main(int argc, char **argv) {
-    // initialize sdl2
+    // initialize sdl
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cerr << "error initializing sdl!\n";
         return -1;
@@ -19,29 +22,26 @@ int main(int argc, char **argv) {
     srand(time(NULL)); 
 
     if (argc > 1) {
-        // create window and renderer
-        SDL_Renderer *sdlrenderer;
-        SDL_Window *sdlwindow;
-
-        int error = SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_RESIZABLE, &sdlwindow, &sdlrenderer);
-        if (!sdlwindow || !sdlrenderer || error) {
-            std::cerr << "error creating window or renderer!\n";
-            return -1;
-        }
-
         // read image
         cv::Mat image = cv::imread(argv[1]);
-        // create window instance
-        Window window(sdlwindow, sdlrenderer);
         Geometrize geometrize(image);
+        Window window;
+        std::thread updateThr(updateGeometrize, &geometrize, &window);
         while (window.running()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            geometrize.update();
             window.drawImage(geometrize.getShapeImage());
             window.update();
         } 
-
+        window.close();
+        std::cout << "closing...\n";
+        updateThr.join(); // wait till the thread finishes
         //cv::imwrite("test_out.jpg", image);
     }
     return 0;
+}
+
+void updateGeometrize(Geometrize *geometrize, Window *window) {
+    while (window->running()) {
+        geometrize->update();
+    }
 }

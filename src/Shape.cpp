@@ -145,9 +145,9 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
         for (const auto& pixel : layer) {
             if (pixel) {
                 if (x < m_imageW && y < m_imageH && y >= 0 && x >= 0) {
-                    srcImage.at<cv::Vec3b>(y, x)[0] = m_color.r;
+                    srcImage.at<cv::Vec3b>(y, x)[2] = m_color.r;
                     srcImage.at<cv::Vec3b>(y, x)[1] = m_color.g;
-                    srcImage.at<cv::Vec3b>(y, x)[2] = m_color.b;
+                    srcImage.at<cv::Vec3b>(y, x)[0] = m_color.b;
                 }
             }
             x++;

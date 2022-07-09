@@ -1,9 +1,14 @@
 #include "Window.hpp"
 
 
-Window::Window(SDL_Window *window, SDL_Renderer *renderer) {
-    m_window = window;
-    m_renderer = renderer;
+Window::Window() {
+    // creating window and renderer
+    int error = SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_RESIZABLE, &m_window, &m_renderer);
+    if (!m_window || !m_renderer || error) {
+        std::cerr << "error creating window or renderer!\n";
+        exit(-1);
+    }
+
     m_running = true;
     m_lastImageDrawn = 0.0;
     SDL_SetWindowTitle(m_window, "Geometrize");
@@ -51,3 +56,7 @@ double Window::clock() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
+void Window::close() {
+    SDL_DestroyRenderer(m_renderer);
+    SDL_DestroyWindow(m_window);
+}

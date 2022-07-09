@@ -34,3 +34,6 @@
 obj/
 client
 vgcore.*
+*.png
+*.jpg
+*.jpeg
