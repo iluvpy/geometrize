@@ -10,7 +10,8 @@ public:
     Geometrize(const cv::Mat& image);
     void update();
     void generateShapes();
-    void findBestShapes(Shape *bestShape);
+    void sortBestShapes();
+    void findBestShapes();
     cv::Mat getShapeImage();
 private:
     cv::Mat m_originalImage;

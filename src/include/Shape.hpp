@@ -40,6 +40,7 @@ public:
     Color getColor() const;
     Point getPosition() const;
     cv::Mat getImageWithShape(cv::Mat image);
+    cv::Mat addShapeToImage(cv::Mat srcImage) const;
 
     bool operator>(const Shape& other) {
         return getScore() > other.getScore();
@@ -77,6 +78,5 @@ private:
     void mutateTriangle();
     void mutateCube();
     void mutateRectangle();
-    cv::Mat addShapeToImage(cv::Mat srcImage) const;
     std::vector<std::vector<bool>> getMat(int width, int height);
 };

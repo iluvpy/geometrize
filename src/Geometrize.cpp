@@ -30,7 +30,6 @@ void Geometrize::generateShapes() {
         shape.generateRandomShape();
         m_shapes.push_back(shape);
     }
-
 }
 
 
@@ -38,18 +37,20 @@ cv::Mat Geometrize::getShapeImage() {
     return m_shapeImage;
 }
 
-void Geometrize::findBestShapes(Shape *bestShape) {
-    //std::cout << "finding best shape\n";
-    // bubble sort the shapes //XXX make a better sort
-    // calculate the scores
+void Geometrize::sortBestShapes() {
     for (int i = 0; i < m_shapes.size(); i++) {
         m_shapes[i].calculateScore(m_originalImage, m_shapeImage);
     }
 
     std::sort(m_shapes.begin(), m_shapes.end());
+}
+
+void Geometrize::findBestShapes() {
+    //std::cout << "finding best shape\n";
+    // bubble sort the shapes //XXX make a better sort
+    // calculate the score
+    sortBestShapes();
  
-    //set best shape
-    *bestShape = m_shapes[0]; 
     // delete worst shapes
     int halfIndex = (int)(m_shapes.size()/2);
     while (m_shapes.size() > halfIndex) {
@@ -67,12 +68,16 @@ void Geometrize::findBestShapes(Shape *bestShape) {
 }
 
 void Geometrize::update() {
-    Shape bestShape;
-    for (int i = 0; i < 1; i++) {
-        findBestShapes(&bestShape);
+    for (int i = 0; i < 5; i++) {
+        findBestShapes();
     }
-    cv::Mat img = bestShape.getImageWithShape(m_shapeImage);
-    m_shapeImage = img;
+
+    sortBestShapes();
+
+    for (int i = 0; i < 10; i++) {
+        m_shapes[0].addShapeToImage(m_shapeImage);
+        sortBestShapes();
+    }
     cv::imwrite("shape_img.png", m_shapeImage);
     DEBUG_LOG("saved shape img");
 }

@@ -139,19 +139,15 @@ std::vector<std::vector<bool>> Shape::getMat(int width, int height) {
 
 cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
 
-    int y = m_x-1;
-    int x = m_y-1;
+    int y = m_y-1;
+    int x = m_x-1;
     for (const auto& layer : m_shapeMat) {
         for (const auto& pixel : layer) {
             if (pixel) {
                 if (x < m_imageW && y < m_imageH && y >= 0 && x >= 0) {
-                    int r = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.r;
-                    int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
-                    int b = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.b;
-
-                    srcImage.at<cv::Vec3b>(y, x)[0] = r <= 255 ? r : 255-r;
-                    srcImage.at<cv::Vec3b>(y, x)[1] = g <= 255 ? g : 255-g;
-                    srcImage.at<cv::Vec3b>(y, x)[2] = b <= 255 ? b : 255-b;
+                    srcImage.at<cv::Vec3b>(y, x)[0] = m_color.r;
+                    srcImage.at<cv::Vec3b>(y, x)[1] = m_color.g;
+                    srcImage.at<cv::Vec3b>(y, x)[2] = m_color.b;
                 }
             }
             x++;
