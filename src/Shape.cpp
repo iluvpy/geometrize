@@ -172,12 +172,6 @@ double Shape::getScore() const {
     return m_score;
 }   
 
-
-cv::Mat Shape::getImageWithShape(cv::Mat image) {
-    return addShapeToImage(image.clone());
-}
-
-
 void Shape::mutate() {
     switch (m_shapeType)
     {

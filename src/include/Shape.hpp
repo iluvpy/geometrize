@@ -39,7 +39,6 @@ public:
     std::vector<std::vector<bool>> getShapeMat() const;
     Color getColor() const;
     Point getPosition() const;
-    cv::Mat getImageWithShape(cv::Mat image);
     cv::Mat addShapeToImage(cv::Mat srcImage) const;
 
     bool operator>(const Shape& other) {

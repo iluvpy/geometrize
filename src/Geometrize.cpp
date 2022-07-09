@@ -74,18 +74,16 @@ void Geometrize::update() {
 
     sortBestShapes();
 
-    for (int i = 0; i < 10; i++) {
-        m_shapes[0].addShapeToImage(m_shapeImage);
-        sortBestShapes();
-    }
+    
+    m_shapeImage = m_shapes[0].addShapeToImage(m_shapeImage);
     cv::imwrite("shape_img.png", m_shapeImage);
-    cv::imwrite("color_diff.png", getColorDiffImage(m_originalImage, m_shapeImage));
+    cv::imwrite("color_diff.png", getColorDiffImage());
     DEBUG_LOG("saved shape img");
 }
 
 
-cv::Mat getColorDiffImage(cv::Mat original, cv::Mat shapeImg) {
+cv::Mat Geometrize::getColorDiffImage() {
     cv::Mat resultImg;
-    cv::subtract(shapeImg, original, resultImg);
+    cv::subtract(m_shapeImage, m_originalImage, resultImg);
     return resultImg;
 }
