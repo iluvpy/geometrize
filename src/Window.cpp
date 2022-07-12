@@ -3,7 +3,7 @@
 
 Window::Window() {
     // creating window and renderer
-    int error = SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_RESIZABLE, &m_window, &m_renderer);
+    int error = SDL_CreateWindowAndRenderer(1920, 1080, NULL, &m_window, &m_renderer);
     if (!m_window || !m_renderer || error) {
         std::cerr << "error creating window or renderer!\n";
         exit(-1);
@@ -15,6 +15,8 @@ Window::Window() {
 }
 
 void Window::drawImage(cv::Mat image) {
+    // draw the image every IMAGE_DRAW_INTERVAL
+    // to avoid drawing the image too often
     double now = clock();
     if (now-m_lastImageDrawn > IMAGE_DRAW_INTERVAL) {
         SDL_SetRenderDrawColor(m_renderer, 100, 100, 100, 255);
@@ -24,7 +26,7 @@ void Window::drawImage(cv::Mat image) {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 cv::Vec3b pixel = image.at<cv::Vec3b>(i, j);
-                SDL_SetRenderDrawColor(m_renderer, pixel[0], pixel[1], pixel[2], 255);
+                SDL_SetRenderDrawColor(m_renderer, pixel[2], pixel[1], pixel[0], 255);
                 SDL_RenderDrawPoint(m_renderer, j, i);
             }
        }

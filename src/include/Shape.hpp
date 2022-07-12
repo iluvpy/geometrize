@@ -2,18 +2,26 @@
 #include <vector>
 #include <opencv2/core.hpp>
 #include <limits>
-#include "Pixel.hpp"
+#include "Point.hpp"
 #include "Color.hpp"
+#include "Util.hpp"
+
+#define MIN_SHAPE_WIDTH 5
 
 #define MAX_CIRCLE_DIAMETER 800
 #define MIN_CIRCLE_DIAMETER 5
-#define CIRCLE_MUTATION_RANGE 20
+#define CIRCLE_MUTATION_RANGE 100
 
 #define TRIANGLE_BASE_MAX 800
 #define TRIANGLE_BASE_MIN 5
 #define TRIANGLE_HEIGHT_MAX 800
 #define TRIANGLE_HEIGHT_MIN 5
 #define TRIANGLE_PADDING 200 
+
+// extra space for the array that contains the circle as 
+// the circle algorithms isnt perfect and needs extra space
+#define EXTRA_CIRCLE_ARRAY_SPACE 10
+
 
 #define DEFAULT_SCORE std::numeric_limits<double>::max()
 
@@ -77,5 +85,9 @@ private:
     void mutateTriangle();
     void mutateCube();
     void mutateRectangle();
+    int getWHMutation(int min, int max);
+    int getXMutation(int min, int max);
+    int getYMutation(int min, int max);
+    int getColorMut(int min, int max, short int initialColor);
     std::vector<std::vector<bool>> getMat(int width, int height);
 };

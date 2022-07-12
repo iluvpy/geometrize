@@ -12,7 +12,6 @@ rule lnk
 build obj/main.o: cc src/main.cpp
 build obj/window.o: cc src/Window.cpp
 build obj/geometrize.o: cc src/Geometrize.cpp
-build obj/pixel.o: cc src/Pixel.cpp
 build obj/shape.o: cc src/Shape.cpp
 build obj/util.o: cc src/Util.cpp
-build client: lnk obj/main.o obj/window.o obj/geometrize.o obj/pixel.o obj/shape.o obj/util.o
+build client: lnk obj/main.o obj/window.o obj/geometrize.o obj/shape.o obj/util.o

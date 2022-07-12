@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+// this will run in a seperate thread to avoid delaying the window event polling
 void updateGeometrize(Geometrize *geometrize, Window *window) {
     while (window->running()) {
         geometrize->update();

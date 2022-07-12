@@ -56,15 +56,17 @@ Shapes Shape::getRandomShape() {
 void Shape::createRandomCircle() {
     m_width = Util::getRandInt(MIN_CIRCLE_DIAMETER, MAX_CIRCLE_DIAMETER);
     m_height = m_width;
-    m_x = Util::getRandInt(-m_width+1, m_imageW-1);
-    m_y = Util::getRandInt(-m_height+1, m_imageH-1);
+
+    // generating random values for x y in a range where the circle is visible
+    m_x = Util::getRandInt(-m_width+1+EXTRA_CIRCLE_ARRAY_SPACE, m_imageW-1);
+    m_y = Util::getRandInt(-m_height+1+EXTRA_CIRCLE_ARRAY_SPACE, m_imageH-1);
     m_color = Util::getRandomColor();
     m_angle = 0;
     createCircle();
 }
 
 void Shape::createCircle() {
-    std::vector<std::vector<bool>> mat = getMat(m_width+100, m_height+100);
+    std::vector<std::vector<bool>> mat = getMat(m_width+EXTRA_CIRCLE_ARRAY_SPACE, m_height+EXTRA_CIRCLE_ARRAY_SPACE);
     
     // create circle using the randomly generated values
     int radius = (int)(m_width/2);
@@ -86,7 +88,7 @@ void Shape::createCircle() {
 void Shape::createRandomTriangle() {
     m_width = Util::getRandInt(TRIANGLE_BASE_MIN, TRIANGLE_BASE_MAX);
     m_height = Util::getRandInt(TRIANGLE_HEIGHT_MIN, TRIANGLE_HEIGHT_MAX);
-    m_x = Util::getRandInt(-m_width+1, m_imageW-1);
+    m_x = Util::getRandInt(-m_width+1, m_imageW+m_width-1);
     m_y = Util::getRandInt(-m_height+1, m_imageH-1);
     m_color = Util::getRandomColor();
     m_angle = Util::getRandInt(0, 360);
@@ -145,9 +147,15 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
         for (const auto& pixel : layer) {
             if (pixel) {
                 if (x < m_imageW && y < m_imageH && y >= 0 && x >= 0) {
-                    srcImage.at<cv::Vec3b>(y, x)[2] = m_color.r;
-                    srcImage.at<cv::Vec3b>(y, x)[1] = m_color.g;
-                    srcImage.at<cv::Vec3b>(y, x)[0] = m_color.b;
+                    int r = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.r;
+                    int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
+                    int b = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.b;
+                    if (r < 0) {r = 0;}
+                    if (g < 0) {g = 0;}
+                    if (b < 0) {b = 0;}
+                    srcImage.at<cv::Vec3b>(y, x)[2] = r <= 255 ? r : 255;
+                    srcImage.at<cv::Vec3b>(y, x)[1] = g <= 255 ? g : 255;
+                    srcImage.at<cv::Vec3b>(y, x)[0] = b <= 255 ? b : 255;
                 }
             }
             x++;
@@ -197,14 +205,50 @@ const Shape& Shape::copy() const {
     return *this;
 }
 
+// returns a valid mutation value for with or height
+int Shape::getWHMutation(int min, int max) {
+    int randInt;
+    do {
+        randInt = Util::getRandInt(min, max);
+    } while (m_width+randInt < MIN_SHAPE_WIDTH);
+    return randInt;
+}
+
+int Shape::getXMutation(int min, int max) {
+    int randInt;
+    // while the value for x are not valid, generate a new one
+    do {
+        randInt = Util::getRandInt(min, max);
+    } while (m_x+randInt < -m_width+1+EXTRA_CIRCLE_ARRAY_SPACE || m_x+randInt > m_imageW);
+    return randInt;
+}
+
+int Shape::getYMutation(int min, int max) {
+    int randInt;
+    // while the value for y are not valid, generate a new one
+    do {
+        randInt = Util::getRandInt(min, max);
+    } while (m_y+randInt < -m_height+1+EXTRA_CIRCLE_ARRAY_SPACE || m_y+randInt > m_imageH);
+    return randInt;
+}
+
+int Shape::getColorMut(int min, int max, short int initialColor) {
+    int randInt;
+    do {
+        randInt = Util::getRandInt(min, max);
+    } while (initialColor+randInt < -255 || initialColor+randInt > 255);
+    return randInt;
+}
+
+
 void Shape::mutateCircle() {
-    m_width += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_width += getWHMutation(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
     m_height = m_width;
-    m_x += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
-    m_y += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
-    m_color.r += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
-    m_color.g += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
-    m_color.b += Util::getRandInt(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_x += getXMutation(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_y += getYMutation(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    m_color.r += getColorMut(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE, m_color.r);
+    m_color.g += getColorMut(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE, m_color.g);
+    m_color.b += getColorMut(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE, m_color.b);
     m_angle = 0;
     createCircle();
 }

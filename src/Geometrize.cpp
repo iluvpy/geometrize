@@ -11,7 +11,7 @@ Geometrize::Geometrize(const cv::Mat& image) {
     int width = image.cols;
     int height = image.rows;
 
-    // clear image (all pixels to white)
+    // clear image (all pixels to black)
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             m_shapeImage.at<cv::Vec3b>(i, j) = cv::Vec3b(255, 255, 255); 
@@ -45,6 +45,18 @@ void Geometrize::sortBestShapes() {
     std::sort(m_shapes.begin(), m_shapes.end());
 }
 
+void Geometrize::mutateShapes() {
+    int size = m_shapes.size();
+    // mutate shapes
+    for (int i = 0; i < size; i++) {
+        Shape mutatedCopy = m_shapes[i];
+        mutatedCopy.mutate();
+        m_shapes.push_back(mutatedCopy);
+        m_shapes[i].mutate();
+    }
+}
+
+
 void Geometrize::findBestShapes() {
     //std::cout << "finding best shape\n";
     // bubble sort the shapes //XXX make a better sort
@@ -58,24 +70,16 @@ void Geometrize::findBestShapes() {
     }
     
 
-    int size = m_shapes.size();
-    // mutate shapes
-    for (int i = 0; i < size; i++) {
-        Shape mutatedCopy = m_shapes[i];
-        mutatedCopy.mutate();
-        m_shapes.push_back(mutatedCopy);
-    }
 }
 
 void Geometrize::update() {
-    for (int i = 0; i < 5; i++) {
-        findBestShapes();
-    }
-
+    
+    findBestShapes();
+    mutateShapes();
     sortBestShapes();
-
     
     m_shapeImage = m_shapes[0].addShapeToImage(m_shapeImage);
+    DEBUG_LOG(m_shapes.size());
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
     DEBUG_LOG("saved shape img");
