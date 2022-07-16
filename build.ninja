@@ -1,4 +1,4 @@
-cflags = -std=c++17 -Wall -g -I/usr/local/include/opencv4/ -I./src/include/
+cflags = -std=c++17 -Wall -I/usr/local/include/opencv4/ -I./src/include/ -O3
 lflags = -L/usr/local/lib -lSDL2 -lSDL2_image -lopencv_imgcodecs -lopencv_objdetect -lopencv_features2d -lopencv_imgproc -lopencv_highgui -lopencv_core -lopencv_features2d  
 cxx = clang++ 
 
@@ -14,4 +14,4 @@ build obj/window.o: cc src/Window.cpp
 build obj/geometrize.o: cc src/Geometrize.cpp
 build obj/shape.o: cc src/Shape.cpp
 build obj/util.o: cc src/Util.cpp
-build client: lnk obj/main.o obj/window.o obj/geometrize.o obj/shape.o obj/util.o
+build geometrize: lnk obj/main.o obj/window.o obj/geometrize.o obj/shape.o obj/util.o

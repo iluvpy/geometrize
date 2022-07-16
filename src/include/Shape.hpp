@@ -18,10 +18,9 @@
 #define TRIANGLE_HEIGHT_MIN 5
 #define TRIANGLE_PADDING 200 
 
-// extra space for the array that contains the circle as 
-// the circle algorithms isnt perfect and needs extra space
-#define EXTRA_CIRCLE_ARRAY_SPACE 10
-
+// the pixel that is furthest from the border of the window needs 
+// to be at least MIN_VISIBILITY away from it
+#define MIN_VISIBILITY 10 
 
 #define DEFAULT_SCORE std::numeric_limits<double>::max()
 

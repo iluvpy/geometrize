@@ -6,7 +6,7 @@
 #include <iostream>
 #include "Shape.hpp"
 
-#define MAX_SHAPES 100
+#define MAX_SHAPES 1000
 
 class Geometrize {
 public:
@@ -22,4 +22,5 @@ private:
     cv::Mat m_originalImage;
     cv::Mat m_shapeImage;
     std::vector<Shape> m_shapes;
+    int m_generation;
 };

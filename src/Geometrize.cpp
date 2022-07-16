@@ -4,7 +4,8 @@
 Geometrize::Geometrize(const cv::Mat& image) {
     m_originalImage = image.clone();
     m_shapeImage = image.clone();
-
+    m_generation = 0;
+    
     int width = image.cols;
     int height = image.rows;
 
@@ -66,7 +67,8 @@ void Geometrize::sortBestShapes() {
         m_shapes[i].calculateScore(m_originalImage, m_shapeImage, beforeScore);
     }
 
-    std::sort(m_shapes.rbegin(), m_shapes.rend());
+    // sort biggest to smallest
+    std::sort(m_shapes.begin(), m_shapes.end(), std::greater<>());
 }
 
 void Geometrize::mutateShapes() {
@@ -98,6 +100,8 @@ void Geometrize::update() {
     
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
+    m_generation++;
+    std::cout << "generation: " << m_generation << std::endl;
     //DEBUG_LOG("saved shape img");
     // DEBUG_LOG(m_shapes[0].getScore());
     // DEBUG_LOG(m_shapes[0].getPosition().x);

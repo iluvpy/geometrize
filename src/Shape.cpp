@@ -58,18 +58,18 @@ void Shape::createRandomCircle() {
     m_height = m_width;
 
     // generating random values for x y in a range where the circle is visible
-    m_x = Util::getRandInt(-m_width+1+EXTRA_CIRCLE_ARRAY_SPACE, m_imageW-1);
-    m_y = Util::getRandInt(-m_height+1+EXTRA_CIRCLE_ARRAY_SPACE, m_imageH-1);
+    m_x = Util::getRandInt(-m_width+1, m_imageW-1);
+    m_y = Util::getRandInt(-m_height+1, m_imageH-1);
     m_color = Util::getRandomColor();
     m_angle = 0;
     createCircle();
 }
 
 void Shape::createCircle() {
-    std::vector<std::vector<bool>> mat = getMat(m_width+EXTRA_CIRCLE_ARRAY_SPACE, m_height+EXTRA_CIRCLE_ARRAY_SPACE);
+    std::vector<std::vector<bool>> mat = getMat(m_width, m_height);
     
     // create circle using the randomly generated values
-    int radius = (int)(m_width/2);
+    int radius = (int)(m_width/2)-1;
     int i = 0;
     int k = 0;
     for(int y=-radius; y <= radius; y++) {
@@ -221,7 +221,7 @@ int Shape::getXMutation(int min, int max) {
     // while the value for x are not valid, generate a new one
     do {
         randInt = Util::getRandInt(min, max);
-    } while (m_x+randInt < -m_width+1+EXTRA_CIRCLE_ARRAY_SPACE || m_x+randInt > m_imageW);
+    } while (m_x+randInt < -m_width+MIN_VISIBILITY || m_x+randInt > m_imageW-MIN_VISIBILITY);
     return randInt;
 }
 
@@ -230,7 +230,7 @@ int Shape::getYMutation(int min, int max) {
     // while the value for y are not valid, generate a new one
     do {
         randInt = Util::getRandInt(min, max);
-    } while (m_y+randInt < -m_height+1+EXTRA_CIRCLE_ARRAY_SPACE || m_y+randInt > m_imageH);
+    } while (m_y+randInt < -m_height+MIN_VISIBILITY || m_y+randInt > m_imageH-MIN_VISIBILITY);
     return randInt;
 }
 
