@@ -60,6 +60,7 @@ cv::Mat Geometrize::getShapeImage() {
 }
 
 void Geometrize::sortBestShapes() {
+    // calculate the scores
     for (int i = 0; i < m_shapes.size(); i++) {
         m_shapes[i].calculateScore(m_originalImage, m_shapeImage);
     }
@@ -91,11 +92,10 @@ void Geometrize::deleteWorst() {
 
 void Geometrize::update() {
     sortBestShapes();
+    m_shapes[0].addShapeToImage(m_shapeImage);
     deleteWorst();
     mutateShapes();
-    sortBestShapes();
     
-    m_shapes[0].addShapeToImage(m_shapeImage);
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
     DEBUG_LOG("saved shape img");
