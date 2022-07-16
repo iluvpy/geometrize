@@ -10,7 +10,7 @@
 
 #define MAX_CIRCLE_DIAMETER 800
 #define MIN_CIRCLE_DIAMETER 5
-#define CIRCLE_MUTATION_RANGE 100
+#define CIRCLE_MUTATION_RANGE 50
 
 #define TRIANGLE_BASE_MAX 800
 #define TRIANGLE_BASE_MIN 5
@@ -89,5 +89,6 @@ private:
     int getXMutation(int min, int max);
     int getYMutation(int min, int max);
     int getColorMut(int min, int max, short int initialColor);
+    double calculatePixelDifference(cv::Mat image, cv::Mat image2);
     std::vector<std::vector<bool>> getMat(int width, int height);
 };

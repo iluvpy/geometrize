@@ -147,15 +147,13 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
         for (const auto& pixel : layer) {
             if (pixel) {
                 if (x < m_imageW && y < m_imageH && y >= 0 && x >= 0) {
-                    int r = srcImage.at<cv::Vec3b>(y, x)[2] + m_color.r;
-                    int g = srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g;
-                    int b = srcImage.at<cv::Vec3b>(y, x)[0] + m_color.b;
-                    if (r < 0) {r = 0;}
-                    if (g < 0) {g = 0;}
-                    if (b < 0) {b = 0;}
-                    srcImage.at<cv::Vec3b>(y, x)[2] = r <= 255 ? r : 255;
-                    srcImage.at<cv::Vec3b>(y, x)[1] = g <= 255 ? g : 255;
-                    srcImage.at<cv::Vec3b>(y, x)[0] = b <= 255 ? b : 255;
+                    // calculate average 
+                    int r = (srcImage.at<cv::Vec3b>(y, x)[2] + m_color.r) / 2; 
+                    int g = (srcImage.at<cv::Vec3b>(y, x)[1] + m_color.g) / 2; 
+                    int b = (srcImage.at<cv::Vec3b>(y, x)[0] + m_color.b) / 2; 
+                    srcImage.at<cv::Vec3b>(y, x)[2] = r;
+                    srcImage.at<cv::Vec3b>(y, x)[1] = g;
+                    srcImage.at<cv::Vec3b>(y, x)[0] = b;
                 }
             }
             x++;
@@ -170,9 +168,23 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
 // calculates a new score, sets the score member to the value and returns it
 void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage) {
     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
-    cv::Mat resultingImage;
-    cv::subtract(imgWithShape, originalImage, resultingImage);
-    m_score = cv::sum(resultingImage)[0]; 
+    m_score = calculatePixelDifference(originalImage, imgWithShape);
+}
+
+// returns how different an image is from another
+// the lower the return value the less difference they have
+double Shape::calculatePixelDifference(cv::Mat image, cv::Mat image2) {
+    int width = image.cols;
+    int height = image.rows;
+    double score = 0.0;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            score += std::abs(image.at<cv::Vec3b>(i, j)[0] - image2.at<cv::Vec3b>(i, j)[0]);
+            score += std::abs(image.at<cv::Vec3b>(i, j)[1] - image2.at<cv::Vec3b>(i, j)[1]);
+            score += std::abs(image.at<cv::Vec3b>(i, j)[2] - image2.at<cv::Vec3b>(i, j)[2]);
+        }
+    }
+    return score;
 }
 
 // returns the score member
@@ -180,7 +192,11 @@ double Shape::getScore() const {
     return m_score;
 }   
 
+// 50% chance of mutation
 void Shape::mutate() {
+    if (Util::getRandInt(0, 1)) {
+        return;
+    }
     switch (m_shapeType)
     {
         case Circle:

@@ -5,9 +5,9 @@ int Util::getRandInt(int min, int max) {
 }
 
 Color Util::getRandomColor() {
-	short int r = getRandInt(-255, 255);
-	short int g = getRandInt(-255, 255);
-	short int b = getRandInt(-255, 255);
+	unsigned char r = getRandInt(0, 255);
+	unsigned char g = getRandInt(0, 255);
+	unsigned char b = getRandInt(0, 255);
     return Color{r, g, b};
 }
 

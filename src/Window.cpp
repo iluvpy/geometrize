@@ -3,7 +3,7 @@
 
 Window::Window() {
     // creating window and renderer
-    int error = SDL_CreateWindowAndRenderer(1920, 1080, NULL, &m_window, &m_renderer);
+    int error = SDL_CreateWindowAndRenderer(1920, 1080, SDL_WINDOW_RESIZABLE, &m_window, &m_renderer);
     if (!m_window || !m_renderer || error) {
         std::cerr << "error creating window or renderer!\n";
         exit(-1);

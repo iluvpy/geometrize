@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Shape.hpp"
 
-#define MAX_SHAPES 100
+#define MAX_SHAPES 1000
 
 class Geometrize {
 public:
@@ -11,8 +11,8 @@ public:
     void update();
     void generateShapes();
     void sortBestShapes();
-    void findBestShapes();
     void mutateShapes();
+    void deleteWorst();
     cv::Mat getColorDiffImage();
     cv::Mat getShapeImage();
 private:
