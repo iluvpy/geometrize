@@ -22,6 +22,16 @@ int main(int argc, char **argv) {
     srand(time(NULL)); 
 
     if (argc > 1) {
+        std::string imgPath = argv[1];
+        FILE *imgFile;
+        if ((imgFile = fopen(imgPath.c_str(), "r"))) {
+            fclose(imgFile);
+        } 
+        else {
+            std::cerr << "error occured trying to read file\n";
+            return -1;
+        }
+
         // read image
         cv::Mat image = cv::imread(argv[1]);
         Geometrize geometrize(image);

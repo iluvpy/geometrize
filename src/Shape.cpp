@@ -165,27 +165,13 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
 }
 
 
-// calculates a new score, sets the score member to the value and returns it
-void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage) {
+// calculates a new score and sets the score member 
+void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage, double beforeScore) {
     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
-    m_score = calculatePixelDifference(originalImage, imgWithShape);
+    m_score = beforeScore - Util::calculatePixelDifference(originalImage, imgWithShape);
 }
 
-// returns how different an image is from another
-// the lower the return value the less difference they have
-double Shape::calculatePixelDifference(cv::Mat image, cv::Mat image2) {
-    int width = image.cols;
-    int height = image.rows;
-    double score = 0.0;
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            score += std::abs(image.at<cv::Vec3b>(i, j)[0] - image2.at<cv::Vec3b>(i, j)[0]);
-            score += std::abs(image.at<cv::Vec3b>(i, j)[1] - image2.at<cv::Vec3b>(i, j)[1]);
-            score += std::abs(image.at<cv::Vec3b>(i, j)[2] - image2.at<cv::Vec3b>(i, j)[2]);
-        }
-    }
-    return score;
-}
+
 
 // returns the score member
 double Shape::getScore() const {
@@ -252,7 +238,7 @@ int Shape::getColorMut(int min, int max, short int initialColor) {
     int randInt;
     do {
         randInt = Util::getRandInt(min, max);
-    } while (initialColor+randInt < -255 || initialColor+randInt > 255);
+    } while (initialColor+randInt < 0 || initialColor+randInt > 255);
     return randInt;
 }
 

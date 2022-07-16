@@ -1,7 +1,4 @@
 #include "Geometrize.hpp"
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <limits>
 #include "Debug.hpp"
 
 Geometrize::Geometrize(const cv::Mat& image) {
@@ -60,12 +57,16 @@ cv::Mat Geometrize::getShapeImage() {
 }
 
 void Geometrize::sortBestShapes() {
+
+    // score adding the shape
+    double beforeScore = Util::calculatePixelDifference(m_originalImage, m_shapeImage);
+    
     // calculate the scores
     for (int i = 0; i < m_shapes.size(); i++) {
-        m_shapes[i].calculateScore(m_originalImage, m_shapeImage);
+        m_shapes[i].calculateScore(m_originalImage, m_shapeImage, beforeScore);
     }
 
-    std::sort(m_shapes.begin(), m_shapes.end());
+    std::sort(m_shapes.rbegin(), m_shapes.rend());
 }
 
 void Geometrize::mutateShapes() {
@@ -98,8 +99,13 @@ void Geometrize::update() {
     
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
-    DEBUG_LOG("saved shape img");
-    DEBUG_LOG(m_shapes[0].getScore());
+    //DEBUG_LOG("saved shape img");
+    // DEBUG_LOG(m_shapes[0].getScore());
+    // DEBUG_LOG(m_shapes[0].getPosition().x);
+    // DEBUG_LOG(m_shapes[0].getPosition().y);
+    // DEBUG_LOG((int)m_shapes[0].getColor().r);
+    // DEBUG_LOG((int)m_shapes[0].getColor().g);
+    // DEBUG_LOG((int)m_shapes[0].getColor().b);
 }
 
 

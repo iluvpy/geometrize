@@ -1,9 +1,12 @@
 #pragma once
 #include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+#include <limits>
 #include <iostream>
 #include "Shape.hpp"
 
-#define MAX_SHAPES 1000
+#define MAX_SHAPES 100
 
 class Geometrize {
 public:

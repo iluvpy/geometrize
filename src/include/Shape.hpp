@@ -41,7 +41,7 @@ public:
     Shape();
     void generateRandomShape();
     void mutate();
-    void calculateScore(cv::Mat originalImage, cv::Mat shapeImage);
+    void calculateScore(cv::Mat originalImage, cv::Mat shapeImage, double beforeScore);
     double getScore() const;
     const Shape& copy() const;
     std::vector<std::vector<bool>> getShapeMat() const;
@@ -89,6 +89,5 @@ private:
     int getXMutation(int min, int max);
     int getYMutation(int min, int max);
     int getColorMut(int min, int max, short int initialColor);
-    double calculatePixelDifference(cv::Mat image, cv::Mat image2);
     std::vector<std::vector<bool>> getMat(int width, int height);
 };
