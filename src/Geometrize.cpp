@@ -76,7 +76,6 @@ void Geometrize::mutateShapes() {
         Shape mutatedCopy = m_shapes[i];
         mutatedCopy.mutate();
         m_shapes.push_back(mutatedCopy);
-        m_shapes[i].mutate();
     }
 }
 

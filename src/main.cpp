@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
         // read image
         cv::Mat image = cv::imread(argv[1]);
         Geometrize geometrize(image);
-        Window window;
+        Window window(image.cols, image.rows);
         std::thread updateThr(updateGeometrize, &geometrize, &window);
         while (window.running()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));

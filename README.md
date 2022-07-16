@@ -18,3 +18,7 @@ or google how to install it on your os
 # Usage
 just install all the dependencies and run `ninja`, after that you can run `client <your-image.png>`.     
 Note: you can use any image format
+
+
+# Problems
+algorithm can get "stuck" where it adds shapes that dont change the image enough to be visible 

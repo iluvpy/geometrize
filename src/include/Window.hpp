@@ -10,7 +10,7 @@
 
 class Window {
 public:
-    Window();
+    Window(int width, int height);
     void drawImage(cv::Mat image);
     void update();
     bool running();
