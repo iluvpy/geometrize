@@ -94,18 +94,28 @@ void Geometrize::deleteWorst() {
 
 void Geometrize::update() {
     sortBestShapes();
-    m_shapes[0].addShapeToImage(m_shapeImage);
-    deleteWorst();
-    mutateShapes();
+    int score;
+    do {
+        score = m_shapes[0].getScore();
+        if (score) {
+            m_shapes[0].addShapeToImage(m_shapeImage);
+            std::cout << "score: " << score << std::endl;
+            std::cout << "generation: " << m_generation << std::endl;
+        } 
+        deleteWorst();
+        mutateShapes();
+    } while (!score);
+
     
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
     m_generation++;
-    std::cout << "generation: " << m_generation << std::endl;
+
     //DEBUG_LOG("saved shape img");
     // DEBUG_LOG(m_shapes[0].getScore());
     // DEBUG_LOG(m_shapes[0].getPosition().x);
     // DEBUG_LOG(m_shapes[0].getPosition().y);
+    // DEBUG_LOG(m_shapes[0].getWidth());
     // DEBUG_LOG((int)m_shapes[0].getColor().r);
     // DEBUG_LOG((int)m_shapes[0].getColor().g);
     // DEBUG_LOG((int)m_shapes[0].getColor().b);

@@ -5,10 +5,10 @@
       "type": "lldb",
       "request": "launch",
       "name": "Launch lldb",
-      "program": "${workspaceFolder}/client",
-      "args": ["dog.jpg"],
+      "program": "${workspaceFolder}/geometrize",
+      "args": ["obama.jpeg"],
       "env": {
-        "LD_LIBRARY_PATH":"{LD_LIBRARY_PATH}:/usr/local/lib"
+        "LD_LIBRARY_PATH":"${LD_LIBRARY_PATH}:/usr/local/lib"
       },
       "cwd": "${workspaceFolder}"
     }

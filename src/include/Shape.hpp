@@ -47,7 +47,7 @@ public:
     Color getColor() const;
     Point getPosition() const;
     cv::Mat addShapeToImage(cv::Mat srcImage) const;
-
+    int getWidth();
     bool operator>(const Shape& other) {
         return getScore() > other.getScore();
     }

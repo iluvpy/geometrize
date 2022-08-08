@@ -1,7 +1,11 @@
 #include "Util.hpp"
 
-int Util::getRandInt(int min, int max) {	
-    return min + rand() % (max+1 - min);
+int Util::getRandInt(int min, int max) {
+    int mod_ = (max+1 - min);
+    if (mod_ == 0) {
+        return 0;
+    }
+    return min + rand() % mod_;
 }
 
 Color Util::getRandomColor() {

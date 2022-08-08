@@ -178,6 +178,10 @@ double Shape::getScore() const {
     return m_score;
 }   
 
+int Shape::getWidth() {
+    return m_width;
+}
+
 // 50% chance of mutation
 void Shape::mutate() {
     if (Util::getRandInt(0, 1)) {
@@ -200,6 +204,9 @@ void Shape::mutate() {
         case Rectangle:
             return mutateRectangle();
             break;
+        
+        default:
+            break;
     }
 }
 
@@ -218,19 +225,23 @@ int Shape::getWHMutation(int min, int max) {
 
 int Shape::getXMutation(int min, int max) {
     int randInt;
-    // while the value for x are not valid, generate a new one
+    int new_x;
+    // while the value for x is not valid, generate a new one
     do {
         randInt = Util::getRandInt(min, max);
-    } while (m_x+randInt < -m_width+MIN_VISIBILITY || m_x+randInt > m_imageW-MIN_VISIBILITY);
+        new_x = m_x + randInt;
+    } while (new_x+m_width < MIN_VISIBILITY || new_x-m_width > m_imageW-MIN_VISIBILITY);
     return randInt;
 }
 
 int Shape::getYMutation(int min, int max) {
     int randInt;
-    // while the value for y are not valid, generate a new one
+    int new_y;
+    // while the value for y is not valid, generate a new one
     do {
         randInt = Util::getRandInt(min, max);
-    } while (m_y+randInt < -m_height+MIN_VISIBILITY || m_y+randInt > m_imageH-MIN_VISIBILITY);
+        new_y = m_y + randInt;
+    } while (new_y+m_height < MIN_VISIBILITY || new_y-m_height > m_imageH-MIN_VISIBILITY);
     return randInt;
 }
 
@@ -246,8 +257,10 @@ int Shape::getColorMut(int min, int max, short int initialColor) {
 void Shape::mutateCircle() {
     m_width += getWHMutation(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
     m_height = m_width;
-    m_x += getXMutation(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
-    m_y += getYMutation(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE);
+    // the width can be changed by CIRCLE_MUTATION_RANGE an if it does then it would be 
+    // impossible to generate visible xy 
+    m_x += getXMutation(-CIRCLE_MUTATION_RANGE-MIN_VISIBILITY, CIRCLE_MUTATION_RANGE+MIN_VISIBILITY);
+    m_y += getYMutation(-CIRCLE_MUTATION_RANGE-MIN_VISIBILITY, CIRCLE_MUTATION_RANGE+MIN_VISIBILITY);
     m_color.r += getColorMut(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE, m_color.r);
     m_color.g += getColorMut(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE, m_color.g);
     m_color.b += getColorMut(-CIRCLE_MUTATION_RANGE, CIRCLE_MUTATION_RANGE, m_color.b);

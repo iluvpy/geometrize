@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
         } 
         window.close();
         std::cout << "closing...\n";
-        updateThr.join(); // wait till the thread finishes
+        updateThr.detach(); // wait till the thread finishes
         //cv::imwrite("test_out.jpg", image);
     }
     return 0;
