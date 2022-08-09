@@ -7,9 +7,9 @@
 #include "Util.hpp"
 #include "Rect.hpp"
 
-#define MIN_SHAPE_WIDTH 20
+#define MIN_SHAPE_WIDTH 2
 
-#define MAX_CIRCLE_DIAMETER 800
+#define MAX_CIRCLE_DIAMETER 1000
 #define MIN_CIRCLE_DIAMETER MIN_SHAPE_WIDTH
 #define CIRCLE_MUTATION_RANGE 50
 

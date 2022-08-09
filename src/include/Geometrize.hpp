@@ -7,6 +7,7 @@
 #include "Shape.hpp"
 
 #define MAX_SHAPES 1000
+#define MIN_SCORE 5000
 
 class Geometrize {
 public:

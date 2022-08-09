@@ -95,7 +95,7 @@ void Geometrize::update() {
     do {
         sortBestShapes();
         score = m_shapes[0].getScore();
-        if (score > 0) {
+        if (score > MIN_SCORE) {
             m_shapes[0].addShapeToImage(m_shapeImage);
             std::cout << "score: " << score << std::endl;
             std::cout << "generation: " << m_generation << std::endl;
@@ -104,7 +104,7 @@ void Geometrize::update() {
         mutateShapes();
         tries++;
         std::cout << "finished generation!\n";
-    } while (score < 1);
+    } while (score < MIN_SCORE);
     std::cout << "tries: " << tries << std::endl;
     
     cv::imwrite("shape_img.png", m_shapeImage);
