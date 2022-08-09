@@ -90,10 +90,10 @@ void Geometrize::deleteWorst() {
 
 
 void Geometrize::update() {
-    sortBestShapes();
     int score;
     int tries = 0;
     do {
+        sortBestShapes();
         score = m_shapes[0].getScore();
         if (score > 0) {
             m_shapes[0].addShapeToImage(m_shapeImage);

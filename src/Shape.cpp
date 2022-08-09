@@ -165,18 +165,13 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
 }
 
 
-// // calculates a new score and sets the score member 
-// void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage, double beforeScore) {
-//     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
-//     m_score = beforeScore - Util::calculatePixelDifference(originalImage, imgWithShape);
-// }
-
 // calculates a new score and sets the score member 
 void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage) {
     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
     double pixelDiffNoImage = Util::calculatePixelDifferenceAt(originalImage, shapeImage, Rect{m_x, m_y, m_width, m_height});
-    double pixelDiffWithImage = Util::calculatePixelDifferenceAt(originalImage, imgWithShape, Rect{m_x, m_y, m_width, m_height});
-    m_score = pixelDiffNoImage - pixelDiffWithImage;
+    double pixelDiffWithShape = Util::calculatePixelDifferenceAt(originalImage, imgWithShape, Rect{m_x, m_y, m_width, m_height});
+    // the smaller the pixel difference with the shape is the bigger the bigger the score
+    m_score = pixelDiffNoImage - pixelDiffWithShape;
 }
 
 
@@ -227,7 +222,7 @@ int Shape::getWHMutation(int min, int max) {
     int randInt;
     do {
         randInt = Util::getRandInt(min, max);
-    } while (m_width+randInt < MIN_SHAPE_WIDTH);
+    } while ((m_width+randInt < MIN_SHAPE_WIDTH) && randInt);
     return randInt;
 }
 
@@ -238,7 +233,7 @@ int Shape::getXMutation(int min, int max) {
     do {
         randInt = Util::getRandInt(min, max);
         new_x = m_x + randInt;
-    } while (new_x+m_width < MIN_VISIBILITY || new_x-m_width > m_imageW-MIN_VISIBILITY);
+    } while ((new_x+m_width < MIN_VISIBILITY || new_x-m_width > m_imageW-MIN_VISIBILITY) && randInt);
     return randInt;
 }
 
@@ -249,7 +244,7 @@ int Shape::getYMutation(int min, int max) {
     do {
         randInt = Util::getRandInt(min, max);
         new_y = m_y + randInt;
-    } while (new_y+m_height < MIN_VISIBILITY || new_y-m_height > m_imageH-MIN_VISIBILITY);
+    } while ((new_y+m_height < MIN_VISIBILITY || new_y-m_height > m_imageH-MIN_VISIBILITY) && randInt);
     return randInt;
 }
 
@@ -257,7 +252,7 @@ int Shape::getColorMut(int min, int max, short int initialColor) {
     int randInt;
     do {
         randInt = Util::getRandInt(min, max);
-    } while (initialColor+randInt < 0 || initialColor+randInt > 255);
+    } while ((initialColor+randInt < 0 || initialColor+randInt > 255) && randInt);
     return randInt;
 }
 
