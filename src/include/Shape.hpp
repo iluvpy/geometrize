@@ -5,11 +5,12 @@
 #include "Point.hpp"
 #include "Color.hpp"
 #include "Util.hpp"
+#include "Rect.hpp"
 
-#define MIN_SHAPE_WIDTH 5
+#define MIN_SHAPE_WIDTH 20
 
 #define MAX_CIRCLE_DIAMETER 800
-#define MIN_CIRCLE_DIAMETER 5
+#define MIN_CIRCLE_DIAMETER MIN_SHAPE_WIDTH
 #define CIRCLE_MUTATION_RANGE 50
 
 #define TRIANGLE_BASE_MAX 800
@@ -40,7 +41,7 @@ public:
     Shape();
     void generateRandomShape();
     void mutate();
-    void calculateScore(cv::Mat originalImage, cv::Mat shapeImage, double beforeScore);
+    void calculateScore(cv::Mat originalImage, cv::Mat shapeImage);
     double getScore() const;
     const Shape& copy() const;
     std::vector<std::vector<bool>> getShapeMat() const;

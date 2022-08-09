@@ -59,12 +59,9 @@ cv::Mat Geometrize::getShapeImage() {
 
 void Geometrize::sortBestShapes() {
 
-    // score adding the shape
-    double beforeScore = Util::calculatePixelDifference(m_originalImage, m_shapeImage);
-    
     // calculate the scores
     for (int i = 0; i < m_shapes.size(); i++) {
-        m_shapes[i].calculateScore(m_originalImage, m_shapeImage, beforeScore);
+        m_shapes[i].calculateScore(m_originalImage, m_shapeImage);
     }
 
     // sort biggest to smallest
@@ -83,7 +80,7 @@ void Geometrize::mutateShapes() {
 
 
 void Geometrize::deleteWorst() {
-    // delete worst shapes
+    // delete worst shapes (lower half)
     int halfIndex = (int)(m_shapes.size()/2);
     while (m_shapes.size() > halfIndex) {
         m_shapes.pop_back();
@@ -95,30 +92,24 @@ void Geometrize::deleteWorst() {
 void Geometrize::update() {
     sortBestShapes();
     int score;
+    int tries = 0;
     do {
         score = m_shapes[0].getScore();
-        if (score) {
+        if (score > 0) {
             m_shapes[0].addShapeToImage(m_shapeImage);
             std::cout << "score: " << score << std::endl;
             std::cout << "generation: " << m_generation << std::endl;
         } 
         deleteWorst();
         mutateShapes();
-    } while (!score);
-
+        tries++;
+        std::cout << "finished generation!\n";
+    } while (score < 1);
+    std::cout << "tries: " << tries << std::endl;
     
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
     m_generation++;
-
-    //DEBUG_LOG("saved shape img");
-    // DEBUG_LOG(m_shapes[0].getScore());
-    // DEBUG_LOG(m_shapes[0].getPosition().x);
-    // DEBUG_LOG(m_shapes[0].getPosition().y);
-    // DEBUG_LOG(m_shapes[0].getWidth());
-    // DEBUG_LOG((int)m_shapes[0].getColor().r);
-    // DEBUG_LOG((int)m_shapes[0].getColor().g);
-    // DEBUG_LOG((int)m_shapes[0].getColor().b);
 }
 
 

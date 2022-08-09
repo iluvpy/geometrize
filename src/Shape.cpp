@@ -165,10 +165,18 @@ cv::Mat Shape::addShapeToImage(cv::Mat srcImage) const{
 }
 
 
+// // calculates a new score and sets the score member 
+// void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage, double beforeScore) {
+//     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
+//     m_score = beforeScore - Util::calculatePixelDifference(originalImage, imgWithShape);
+// }
+
 // calculates a new score and sets the score member 
-void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage, double beforeScore) {
+void Shape::calculateScore(cv::Mat originalImage, cv::Mat shapeImage) {
     cv::Mat imgWithShape = addShapeToImage(shapeImage.clone());
-    m_score = beforeScore - Util::calculatePixelDifference(originalImage, imgWithShape);
+    double pixelDiffNoImage = Util::calculatePixelDifferenceAt(originalImage, shapeImage, Rect{m_x, m_y, m_width, m_height});
+    double pixelDiffWithImage = Util::calculatePixelDifferenceAt(originalImage, imgWithShape, Rect{m_x, m_y, m_width, m_height});
+    m_score = pixelDiffNoImage - pixelDiffWithImage;
 }
 
 
