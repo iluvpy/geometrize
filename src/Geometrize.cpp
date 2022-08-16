@@ -100,10 +100,10 @@ void Geometrize::update() {
         deleteWorst();
         mutateShapes();
     } 
-    else {
-        m_shapes.clear();
-        generateShapes();
-    }
+    // else {
+    //     m_shapes.clear();
+    //     generateShapes();
+    // }
 
     std::cout << "finished generation!\n";
     
