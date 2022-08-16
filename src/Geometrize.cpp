@@ -91,21 +91,21 @@ void Geometrize::deleteWorst() {
 
 void Geometrize::update() {
     int score;
-    int tries = 0;
-    do {
-        sortBestShapes();
-        score = m_shapes[0].getScore();
-        if (score > MIN_SCORE) {
-            m_shapes[0].addShapeToImage(m_shapeImage);
-            std::cout << "score: " << score << std::endl;
-            std::cout << "generation: " << m_generation << std::endl;
-        } 
+    sortBestShapes();
+    score = m_shapes[0].getScore();
+    if (score > MIN_SCORE) {
+        m_shapes[0].addShapeToImage(m_shapeImage);
+        std::cout << "score: " << score << std::endl;
+        std::cout << "generation: " << m_generation << std::endl;
         deleteWorst();
         mutateShapes();
-        tries++;
-        std::cout << "finished generation!\n";
-    } while (score < MIN_SCORE);
-    std::cout << "tries: " << tries << std::endl;
+    } 
+    else {
+        m_shapes.clear();
+        generateShapes();
+    }
+
+    std::cout << "finished generation!\n";
     
     cv::imwrite("shape_img.png", m_shapeImage);
     cv::imwrite("color_diff.png", getColorDiffImage());
