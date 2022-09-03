@@ -6,10 +6,10 @@
 #include <SDL2/SDL.h>
 #include <random>
 #include "Window.hpp"
-#include "Geometrize.hpp"
+#include "ThreadPool.hpp"
 
 
-void updateGeometrize(Geometrize *geometrize, Window *window);
+void updateGeometrize(ThreadPool *threadPool, Window *window);
 
 int main(int argc, char **argv) {
     // initialize sdl
@@ -34,12 +34,13 @@ int main(int argc, char **argv) {
 
         // read image
         cv::Mat image = cv::imread(argv[1]);
-        Geometrize geometrize(image);
+        // Geometrize geometrize(image);
+        ThreadPool threadPool(image, 4);
         Window window(image.cols, image.rows);
-        std::thread updateThr(updateGeometrize, &geometrize, &window);
+        std::thread updateThr(updateGeometrize, &threadPool, &window);
         while (window.running()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            window.drawImage(geometrize.getShapeImage());
+            window.drawImage(threadPool.getShapeImage());
             window.update();
         } 
         window.close();
@@ -51,7 +52,7 @@ int main(int argc, char **argv) {
 }
 
 // this will run in a seperate thread to avoid delaying the window event polling
-void updateGeometrize(Geometrize *geometrize, Window *window) {
+void updateGeometrize(ThreadPool *geometrize, Window *window) {
     while (window->running()) {
         geometrize->update();
     }

@@ -1,5 +1,7 @@
 #pragma once
 #include <random>
+#include <thread>
+#include <chrono>
 #include <opencv2/core.hpp>
 #include "Color.hpp"
 #include "Point.hpp"
@@ -11,5 +13,5 @@ namespace Util {
     Point rotatePoint(const Point& p, const Point& origin, float angle);    
     float toRad(float angle);
     double calculatePixelDifferenceAt(cv::Mat image, cv::Mat image2, Rect rectangle);
-
+    void sleep(int ms);
 }

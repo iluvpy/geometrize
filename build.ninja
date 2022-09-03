@@ -14,4 +14,6 @@ build obj/window.o: cc src/Window.cpp
 build obj/geometrize.o: cc src/Geometrize.cpp
 build obj/shape.o: cc src/Shape.cpp
 build obj/util.o: cc src/Util.cpp
-build geometrize: lnk obj/main.o obj/window.o obj/geometrize.o obj/shape.o obj/util.o
+build obj/threadpool.o: cc src/ThreadPool.cpp
+
+build geometrize: lnk obj/main.o obj/window.o obj/geometrize.o obj/shape.o obj/util.o obj/threadpool.o

@@ -1,41 +1,10 @@
 #include "Geometrize.hpp"
 #include "Debug.hpp"
 
-Geometrize::Geometrize(const cv::Mat& image) {
-    m_originalImage = image.clone();
-    m_shapeImage = image.clone();
+Geometrize::Geometrize(const cv::Mat& originalImage, const cv::Mat& shapeImage) {
+    m_originalImage = originalImage;
+    m_shapeImage = shapeImage;
     m_generation = 0;
-    
-    int width = image.cols;
-    int height = image.rows;
-
-    // calculate average pixel value of original image and set the 
-    // shape image background to that average
-    double b_sum = 0.0;
-    double g_sum = 0.0;
-    double r_sum = 0.0;
-
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            b_sum += m_originalImage.at<cv::Vec3b>(i, j)[0]; 
-            g_sum += m_originalImage.at<cv::Vec3b>(i, j)[1]; 
-            r_sum += m_originalImage.at<cv::Vec3b>(i, j)[2]; 
-        }
-    }
-
-    int pixels = width*height;
-    b_sum /= pixels;
-    g_sum /= pixels;
-    r_sum /= pixels;
-
-    
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            m_shapeImage.at<cv::Vec3b>(i, j)[0] = b_sum; 
-            m_shapeImage.at<cv::Vec3b>(i, j)[1] = g_sum; 
-            m_shapeImage.at<cv::Vec3b>(i, j)[2] = r_sum; 
-        }
-    }
     
     std::cout << "generating " << MAX_SHAPES << " random shapes\n";
     generateShapes();
@@ -53,9 +22,9 @@ void Geometrize::generateShapes() {
 }
 
 
-cv::Mat Geometrize::getShapeImage() {
-    return m_shapeImage;
-}
+// cv::Mat Geometrize::getShapeImage() {
+//     return m_shapeImage;
+// }
 
 void Geometrize::sortBestShapes() {
 
@@ -89,26 +58,24 @@ void Geometrize::deleteWorst() {
 
 
 
+
 void Geometrize::update() {
+    DEBUG_LOG("updating!");
     int score;
     sortBestShapes();
     score = m_shapes[0].getScore();
-    if (score > MIN_SCORE) {
-        m_shapes[0].addShapeToImage(m_shapeImage);
-        std::cout << "score: " << score << std::endl;
-        std::cout << "generation: " << m_generation << std::endl;
-        deleteWorst();
-        mutateShapes();
-    } 
-    // else {
-    //     m_shapes.clear();
-    //     generateShapes();
-    // }
+    m_bestShape = m_shapes[0];
+    //m_shapes[0].addShapeToImage(m_shapeImage);
+    std::cout << "score: " << score << std::endl;
+    std::cout << "generation: " << m_generation << std::endl;
+
+    deleteWorst();
+    mutateShapes();
+    
 
     std::cout << "finished generation!\n";
     
-    cv::imwrite("shape_img.png", m_shapeImage);
-    cv::imwrite("color_diff.png", getColorDiffImage());
+    //cv::imwrite("shape_img.png", m_shapeImage);
     m_generation++;
 }
 
@@ -117,4 +84,13 @@ cv::Mat Geometrize::getColorDiffImage() {
     cv::Mat resultImg;
     cv::subtract(m_shapeImage, m_originalImage, resultImg);
     return resultImg;
+}
+
+int Geometrize::getGeneration() const {
+    return m_generation;
+}
+
+
+const Shape& Geometrize::getCurrentBestShape() const {
+    return m_bestShape;
 }

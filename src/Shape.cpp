@@ -181,6 +181,7 @@ double Shape::getScore() const {
     return m_score;
 }   
 
+
 int Shape::getWidth() {
     return m_width;
 }
