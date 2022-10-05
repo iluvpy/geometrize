@@ -6,10 +6,7 @@
       "request": "launch",
       "name": "Launch lldb",
       "program": "${workspaceFolder}/geometrize",
-      "args": ["obama.jpeg"],
-      "env": {
-        "LD_LIBRARY_PATH":"${LD_LIBRARY_PATH}:/usr/local/lib"
-      },
+      "args": ["minecraft.jpg"],
       "cwd": "${workspaceFolder}"
     }
   ]

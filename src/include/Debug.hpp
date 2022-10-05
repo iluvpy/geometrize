@@ -2,9 +2,8 @@
 #include <iostream>
 
 #ifdef NDEBUG
-#define DEBUG_LOG(x) \
-    std::cout << #x << ": " <<  x << " file: " << __FILE__ << ":" << __LINE__ << std::endl
+#define ON_DEBUG(x) x
 #else
 
-#define DEBUG_LOG(x)
+#define ON_DEBUG(x)
 #endif

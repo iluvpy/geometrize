@@ -56,14 +56,17 @@ void Geometrize::deleteWorst() {
     }
 }
 
+void Geometrize::setShapeImage(const cv::Mat& shapeImage) {
+    m_shapeImage = shapeImage;
+} 
 
 
 
 void Geometrize::update() {
-    DEBUG_LOG("updating!");
-    int score;
+    std::cout << "Geometrize::update was called!\n";
+    
     sortBestShapes();
-    score = m_shapes[0].getScore();
+    int score = m_shapes[0].getScore();
     m_bestShape = m_shapes[0];
     //m_shapes[0].addShapeToImage(m_shapeImage);
     std::cout << "score: " << score << std::endl;

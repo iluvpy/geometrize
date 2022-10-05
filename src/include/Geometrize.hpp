@@ -6,7 +6,7 @@
 #include <iostream>
 #include "Shape.hpp"
 
-#define MAX_SHAPES 100
+#define MAX_SHAPES 200
 #define MIN_SCORE 100
 
 class Geometrize {
@@ -17,6 +17,7 @@ public:
     void sortBestShapes();
     void mutateShapes();
     void deleteWorst();
+    void setShapeImage(const cv::Mat& shapeImage);
     int getGeneration() const;
     const Shape& getCurrentBestShape() const;
     cv::Mat getColorDiffImage();

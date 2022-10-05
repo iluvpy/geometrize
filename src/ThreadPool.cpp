@@ -1,4 +1,7 @@
 #include "ThreadPool.hpp"
+#include "Debug.hpp"
+
+
 
 ThreadPool::ThreadPool(const cv::Mat& originalImage, int threads) {
     m_originalImage = originalImage;
@@ -40,43 +43,61 @@ ThreadPool::ThreadPool(const cv::Mat& originalImage, int threads) {
 
 
     for (int i = 0; i < m_numThreads; i++) {
-        m_gInstances.push_back(Geometrize(m_originalImage, m_shapeImage));
-        m_threads.push_back(std::thread(&ThreadPool::updateThr, this, &m_gInstances[i]));
+        Geometrize gInstance(m_originalImage, m_shapeImage);
+        m_gInstances.push_back(gInstance);
+        m_threads.push_back(std::thread(&ThreadPool::updateThr, this, i));
     }
 }
 
 void ThreadPool::update() {
+    std::cout << "ThreadPool::update was called!\n";
     m_generation++;
     // checking if every thread finished its current generation
-    for (;;) {
+    bool threadsFinished = false;
+    while (!threadsFinished) {
         for (const auto& gInstance : m_gInstances) {
             if (gInstance.getGeneration() != m_generation) {
-                Util::sleep(5);
-                continue;
+                Util::sleep(10);
+                break;
             } 
+            threadsFinished = true;
         }
-        break;
     }
+
+    std::cout << "all threads finished updating!\n"; 
+
     double score = 0.0;
     Shape bestShape;
     for (const auto& gInstance : m_gInstances) {
         Shape gInstanceShape = gInstance.getCurrentBestShape();
-        if (score > gInstanceShape.getScore()) {
+        if (gInstanceShape.getScore() > score) {
             score = gInstanceShape.getScore();
             bestShape = gInstanceShape;
         }
     }
+    
     bestShape.addShapeToImage(m_shapeImage);
     cv::imwrite("shape_image.png", m_shapeImage);
+
+    for (auto& gInstance : m_gInstances) {
+        gInstance.setShapeImage(m_shapeImage);
+    }
     
 }
 
-void ThreadPool::updateThr(Geometrize *gInstance) {
+
+void ThreadPool::updateThr(int threadNumber) {
+    auto id = std::this_thread::get_id();
     for (;;) {
-        if (gInstance->getGeneration()+1 == m_generation) {
-            gInstance->update();
+        /** 
+         * when the threadpool updates the generation is increased by 1, thus calling the update (here) function 
+         * making this thread wait until the treadpool updates again 
+        */
+        if (m_gInstances[threadNumber].getGeneration()+1 == m_generation) {
+            std::cout << "calling Geometrize::update from: " << id << std::endl;
+            m_gInstances[threadNumber].update();
         }
-        Util::sleep(10);
+        Util::sleep(100);
     }
 }
 

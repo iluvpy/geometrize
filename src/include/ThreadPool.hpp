@@ -3,6 +3,16 @@
 #include "Geometrize.hpp"
 #include <thread>
 
+struct GeoInstanceData{
+    int generation;
+    Shape bestShape;
+    Geometrize gInstance;
+
+    GeoInstanceData(const Geometrize &gInstance) 
+    : gInstance(gInstance)
+    {}
+};
+
 class ThreadPool {
 public:
     ThreadPool(const cv::Mat& originalImage, int threads);
@@ -14,7 +24,7 @@ private:
     cv::Mat m_originalImage;
     cv::Mat m_shapeImage;
     std::vector<std::thread> m_threads;
-    std::vector<Geometrize> m_gInstances;
+    std::vector<Geometrize> m_gInstances; 
 
-    void updateThr(Geometrize *gInstance);
+    void updateThr(int threadNumber);
 };

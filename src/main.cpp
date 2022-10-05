@@ -52,8 +52,8 @@ int main(int argc, char **argv) {
 }
 
 // this will run in a seperate thread to avoid delaying the window event polling
-void updateGeometrize(ThreadPool *geometrize, Window *window) {
+void updateGeometrize(ThreadPool *threadPool, Window *window) {
     while (window->running()) {
-        geometrize->update();
+        threadPool->update();
     }
 }
