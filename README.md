@@ -5,6 +5,7 @@ create images from random shapes
 - opencv
 - ninja
 - clang
+- SDL 2
 
 # setup
 if you run into issues with .so files try running 
@@ -21,4 +22,5 @@ Note: you can use any image format
 
 
 # Problems
-algorithm can get "stuck" where it adds shapes that dont change the image enough to be visible 
+algorithm can get "stuck" where it adds shapes that dont change the image enough to be visible,
+essentially a local 
